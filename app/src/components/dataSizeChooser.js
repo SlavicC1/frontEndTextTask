@@ -16,13 +16,18 @@ class DataSizeChooser extends Component{
         var smallurl = 'http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
         var bigurl = 'http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
         return (
-            <div>
-                <input type="radio" name="setDataSize" id="radioSizeChooser1" onClick={this.setUrl.call(this,bigurl)}></input>
-                <label for="radioSizeChooser1">Big Data</label>
-                <input type="radio" name="setDataSize" id="radioSizeChooser2" onClick={this.setUrl.call(this,smallurl)}></input>
-                <label for="radioSizeChooser2">Small Data</label>
-
-                <button onClick={this.props.onClick(this,this.state.url)}>load</button>
+            <div className="header-chooser">
+                <p>
+                    <input type="radio" name="setDataSize" id="radioSizeChooser1" onClick={this.setUrl.call(this,bigurl)}></input>
+                    <label htmlFor="radioSizeChooser1">Big Data</label>
+                </p>
+                <p>
+                    <input type="radio" name="setDataSize" id="radioSizeChooser2" onClick={this.setUrl.call(this,smallurl)}></input>
+                    <label htmlFor="radioSizeChooser2">Small Data</label>
+                </p>
+                <p>
+                    <button onClick={this.props.onClick(this,this.state.url)}>load</button>
+                </p>
             </div>
         );
     }

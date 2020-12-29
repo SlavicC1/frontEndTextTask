@@ -24,28 +24,40 @@ class App extends Component{
         if(this.state.dataIsLoading){
             return(
                 <div>
-                    <DataSizeChooser onClick={this.loadNewData.bind(this)}/>
-                    <Search onClick={this.setSearchPhrase.bind(this)}/>
-                    <p>{this.loadAnimation}</p>
-                    <Navigation currentPageNomber={this.state.currentPageNomber} 
-                        lastPageNomber={Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE)} 
-                        onClick={this.changeCurrentPageNomber.bind(this)}/>
-                    <Description data={this.state.choosenElement}/>
+                    <header className="header">
+                        <DataSizeChooser onClick={this.loadNewData.bind(this)}/>
+                        <Search onClick={this.setSearchPhrase.bind(this)}/>
+                    </header>
+                    <main className="main">
+                        <p>{this.loadAnimation}</p>
+                    </main>
+                    <footer className="footer">
+                        <Navigation currentPageNomber={this.state.currentPageNomber} 
+                            lastPageNomber={Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE)} 
+                            onClick={this.changeCurrentPageNomber.bind(this)}/>
+                        <Description data={this.state.choosenElement}/>
+                    </footer>
                 </div>
             );
         } else{
             return(
                 <div>
-                    <DataSizeChooser onClick={this.loadNewData.bind(this)}/>
-                    <AddElement addNewElement={this.addElement.bind(this)}/>
-                    <Search onClick={this.setSearchPhrase.bind(this)}/>
-                    <Table data={this.dataOnCurrentPage(this.filtredData(this.state.data))} 
-                        choosenElement={this.state.choosenElement}
-                        onHeaderClick={this.sortData.bind(this)} onElementClick={this.showElementDescription.bind(this)}/>
-                    <Navigation currentPageNomber={this.state.currentPageNomber} 
-                        lastPageNomber={Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE)} 
-                        onClick={this.changeCurrentPageNomber.bind(this)}/>
-                    <Description data={this.state.choosenElement}/>
+                    <header className="header">
+                        <DataSizeChooser onClick={this.loadNewData.bind(this)}/>
+                        <AddElement addNewElement={this.addElement.bind(this)}/>
+                        <Search onClick={this.setSearchPhrase.bind(this)}/>
+                    </header>
+                    <main className="main">
+                        <Table data={this.dataOnCurrentPage(this.filtredData(this.state.data))} 
+                            choosenElement={this.state.choosenElement}
+                            onHeaderClick={this.sortData.bind(this)} onElementClick={this.showElementDescription.bind(this)}/>
+                    </main>
+                    <footer className="footer">
+                        <Navigation currentPageNomber={this.state.currentPageNomber} 
+                            lastPageNomber={Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE)} 
+                            onClick={this.changeCurrentPageNomber.bind(this)}/>
+                        <Description data={this.state.choosenElement}/>
+                    </footer>
                 </div>
             );
         }

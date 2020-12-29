@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Description from './description';
 
 class AddElement extends Component{
     constructor(props){
@@ -12,17 +11,32 @@ class AddElement extends Component{
 
     render(){
         if(this.state.formIsOpen){
-            return (<div>
-                <input id="idInput" placeholder="123" onChange={this.dataVerification.bind(this)}></input>
-                <input id="firstNameInput" placeholder="Adam" onChange={this.dataVerification.bind(this)}></input>
-                <input id="lastNameInput" placeholder="Sendler" onChange={this.dataVerification.bind(this)}></input>
-                <input id="emailInput" placeholder="mailbox@mail.com" onChange={this.dataVerification.bind(this)}></input>
-                <input id="phoneInput" placeholder="(xxx)xxx-xxxx" onChange={this.dataVerification.bind(this)}></input>
+            return (<div className="header-addForm">
+                <table>
+                    <thead>
+                    <tr>
+                        <td>id</td>
+                        <td>firstName</td>
+                        <td>lastName</td>
+                        <td>email</td>
+                        <td>phone</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><input style={{width: "50px"}} id="idInput" placeholder="123" onChange={this.dataVerification.bind(this)}></input></td>
+                        <td><input style={{width: "100px"}} id="firstNameInput" placeholder="Adam" onChange={this.dataVerification.bind(this)}></input></td>
+                        <td><input style={{width: "100px"}} id="lastNameInput" placeholder="Sendler" onChange={this.dataVerification.bind(this)}></input></td>
+                        <td><input style={{width: "200px"}} id="emailInput" placeholder="mailbox@mail.com" onChange={this.dataVerification.bind(this)}></input></td>
+                        <td><input style={{width: "120px"}} id="phoneInput" placeholder="(xxx)xxx-xxxx" onChange={this.dataVerification.bind(this)}></input></td>
+                    </tr>
+                    </tbody>
+                </table>
                 <button disabled={!this.state.confirmable} onClick={this.confirmNewElement.bind(this)}>Confirm</button>
                 <button onClick={this.close.bind(this)}>Close</button>
             </div>)
         } else{
-            return (<div>
+            return (<div className="header-adder">
                 <button onClick={this.openForm.bind(this)}>Add Element</button>
             </div>)
         }

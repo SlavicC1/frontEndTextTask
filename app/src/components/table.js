@@ -14,11 +14,11 @@ class Table extends Component{
     render(){
 
         const elements = this.props.data.map(
-            el => {
-                if(el == this.props.choosenElement){
-                    return (<TableElement bg="yellow" data={el} showDescriptionClick={this.props.onElementClick} />);
+            (el, i) => {
+                if(el === this.props.choosenElement){
+                    return (<TableElement key={i*1000+el.id} bg="yellow" data={el} showDescriptionClick={this.props.onElementClick} />);
                 } else{
-                    return (<TableElement bg="white" data={el} showDescriptionClick={this.props.onElementClick} />);
+                    return (<TableElement key={i*1000+el.id} bg="white" data={el} showDescriptionClick={this.props.onElementClick} />);
                 }
             });
         return(

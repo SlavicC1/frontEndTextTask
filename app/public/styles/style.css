@@ -3,6 +3,85 @@ th, td{
     border: 1px solid black;
 }
 
-table{
-    margin: 50px auto;
+.header{
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    background: white;
+    border-bottom: 1px solid black;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-chooser{
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+.header-adder{
+    position: relative;
+    right: 20px;
+    top: 20px;
+}
+
+.header-addForm{
+    background: white;
+    border: 1px solid black;
+    position: fixed;
+    top: 40%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-search{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.main{
+    display: flex;
+    justify-content: center;
+    margin: 200px 0px;
+}
+
+.main>table{
+    width: 600px;
+}
+
+.footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    background: white;
+    border-top: 1px solid black;
+}
+
+.footer-navigation{
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid black;
+    position: relative;
+}
+
+.footer-navigation>button{
+    margin: 0 20px;
+    width: 100px;
+}
+
+.footer-description{
+    margin: 0 auto;
+    width: 400px;
+    border: 1px solid black;
+}
+
+.footer-description>textarea{
+    display: block;
 }

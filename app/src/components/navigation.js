@@ -1,36 +1,34 @@
 import React, {Component} from 'react';
 
 class Navigation extends Component{
-    constructor(props){
-        super(props);
-    }
-
     render(){
         if(this.props.lastPageNomber <= 1){ 
             return (
-                <div>
-                    <p>{this.props.currentPageNomber}</p>
+                <div className="footer-navigation">
+                    {this.props.currentPageNomber}
                 </div>
             );
         } else if(this.props.currentPageNomber === 1){
             return (
-                <div>
-                    <p>{this.props.currentPageNomber}</p>
+                <div className="footer-navigation">
+                    <button disabled style={{visibility: "hidden"}} id="left" onClick={this.props.onClick(this.props.currentPageNomber-1)}>previous</button>
+                    {this.props.currentPageNomber}
                     <button id="right" onClick={this.props.onClick(this.props.currentPageNomber+1)}>next</button>
                 </div>
             );
         } else if(this.props.currentPageNomber === this.props.lastPageNomber){
             return (
-                <div>
+                <div className="footer-navigation">
                     <button id="left" onClick={this.props.onClick(this.props.currentPageNomber-1)}>previous</button>
-                    <p>{this.props.currentPageNomber}</p>
+                    {this.props.currentPageNomber}
+                    <button disabled style={{visibility: "hidden"}} id="right" onClick={this.props.onClick(this.props.currentPageNomber+1)}>next</button>
                 </div>
             );
         } else{
             return (
-                <div>
+                <div className="footer-navigation">
                     <button id="left" onClick={this.props.onClick(this.props.currentPageNomber-1)}>previous</button>
-                    <p>{this.props.currentPageNomber}</p>
+                    {this.props.currentPageNomber}
                     <button id="right" onClick={this.props.onClick(this.props.currentPageNomber+1)}>next</button>
                 </div>
             );

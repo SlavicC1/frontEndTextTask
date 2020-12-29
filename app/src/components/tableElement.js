@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 
 class TableElement extends Component{
-    constructor(props){
-        super(props);
-    }
-    
+   
     render(){
         return (
         <tr style={{background: this.props.bg}} onClick={this.props.showDescriptionClick(this)}>

@@ -4,7 +4,7 @@ class Filter extends Component{
 
     render(){
         return(
-            <div>
+            <div className="header-search">
                 <input></input>
                 <button onClick={this.props.onClick(this)}>Find</button>
             </div>
