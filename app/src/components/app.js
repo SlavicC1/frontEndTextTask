@@ -1,52 +1,60 @@
 import React, {Component} from 'react';
-import Filter from './filter';
+import Search from './search';
 import Navigation from './navigation';
 import Description from './description';
 import DataSizeChooser from './dataSizeChooser';
 import Table from "./table";
+import AddElement from "./addElement";
 
 class App extends Component{
-
     constructor(props){
         super(props);
-
         this.state = {
-            data: this.props.data,
-            filterPhrase: "",
+            dataIsLoading: false,
+            data: props.data,
+            searchPhrase: "",
             currentPageNomber: 1,
             choosenElement: null
         };
-
-        this.elementsOnPageCount = 50;
-
-        this.dataSizeChooser = new DataSizeChooser();
-        this.filter = new Filter({
-            onClick: this.setFilterPhrase.bind(this)
-        });
-        this.table = new Table(this.state.data,this.sortElementsBy.bind(this),this.chooseElement.bind(this));
-        this.navigation = new Navigation(this.changeCurrentPageNomber.bind(this));
-        this.description = new Description();
+        this.ELEMENTSONPAGE = 50;
+        this.loadAnimation = "Loading";
     }
 
     render(){
-        return (
-            <div>
-                {this.dataSizeChooser.render()}
-                {this.filter.render()}
-                {this.table.render()}
-                {this.navigation.render()}
-                {this.description.render()}
-            </div>);
+        if(this.state.dataIsLoading){
+            return(
+                <div>
+                    <DataSizeChooser onClick={this.loadNewData.bind(this)}/>
+                    <Search onClick={this.setSearchPhrase.bind(this)}/>
+                    <p>{this.loadAnimation}</p>
+                    <Navigation currentPageNomber={this.state.currentPageNomber} 
+                        lastPageNomber={Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE)} 
+                        onClick={this.changeCurrentPageNomber.bind(this)}/>
+                    <Description data={this.state.choosenElement}/>
+                </div>
+            );
+        } else{
+            return(
+                <div>
+                    <DataSizeChooser onClick={this.loadNewData.bind(this)}/>
+                    <AddElement addNewElement={this.addElement.bind(this)}/>
+                    <Search onClick={this.setSearchPhrase.bind(this)}/>
+                    <Table data={this.dataOnCurrentPage(this.filtredData(this.state.data))} 
+                        choosenElement={this.state.choosenElement}
+                        onHeaderClick={this.sortData.bind(this)} onElementClick={this.showElementDescription.bind(this)}/>
+                    <Navigation currentPageNomber={this.state.currentPageNomber} 
+                        lastPageNomber={Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE)} 
+                        onClick={this.changeCurrentPageNomber.bind(this)}/>
+                    <Description data={this.state.choosenElement}/>
+                </div>
+            );
+        }
     }
 
-    setFilterPhrase(e){
-        this.setState({
-            data: this.state.data,
-            filterPhrase: e.target.parentElement.getElementsByTagName("INPUT")[0].value,
-            currentPageNomber: this.state.currentPageNomber,
-            choosenElement: this.choosenElement
+    filtredData(){
+        return this.state.data.filter(el => {
+            return this.deepSeach(el, this.state.searchPhrase);
         });
-        this.sendDataToTable(this.table.tableHeader.state);
     }
 
     deepSeach(el, subStr){
@@ -58,13 +66,18 @@ class App extends Component{
                 res = res || el[key].toString().search(subStr)+1;
             }
         }
-
         return res;
+    }
+
+    dataOnCurrentPage(elements){
+        return elements.slice((this.state.currentPageNomber - 1)*this.ELEMENTSONPAGE,
+            this.state.currentPageNomber*this.ELEMENTSONPAGE);
     }
 
     changeCurrentPageNomber(newCurrentPageNomber){
         return (function(e){
             this.setState({
+                dataIsLoading: this.state.dataIsLoading,
                 data: this.state.data,
                 filterPhrase: this.state.filterPhrase,
                 currentPageNomber: newCurrentPageNomber,
@@ -73,77 +86,108 @@ class App extends Component{
         }).bind(this);
     }
 
-    sendDataToTable(headerState){
-        var elements = this.state.data.filter(el => {
-            return this.deepSeach(el, this.state.filterPhrase);
-        });
-
-        this.resetPageNomber(elements.length);
-
-        this.description.setState({
-            data: this.state.choosenElement
-        });
-
-        elements = elements.slice((this.state.currentPageNomber - 1)*this.elementsOnPageCount,
-                                   this.state.currentPageNomber*this.elementsOnPageCount);
-        this.table.setState({
-            chooseElement: this.table.state.choosenElement,
-            data: elements 
-        });
-        this.table.tableHeader.setState(headerState);
-    }
-
-    resetPageNomber(countOfElements){
-        this.setState({
-            data: this.state.data,
-            filterPhrase: this.state.filterPhrase,
-            currentPageNomber: Math.min(Math.ceil(countOfElements/this.elementsOnPageCount),this.state.currentPageNomber),
-            choosenElement: this.state.choosenElement
-        });
-        this.navigation.setState({
-            currentPageNomber: this.state.currentPageNomber,
-            lastPageNomber: Math.ceil(countOfElements/this.elementsOnPageCount)
-        });
-    }
-
-    chooseElement(data){
-        return (function(e){
+    setSearchPhrase(itself){
+        return function(e){
+            this.state.searchPhrase = e.target.parentElement.getElementsByTagName("INPUT")[0].value;
+            this.state.currentPageNomber = Math.ceil(this.filtredData(this.state.data).length/this.ELEMENTSONPAGE);
             this.setState({
+                dataIsLoading: this.dataIsLoading,
                 data: this.state.data,
-                filterPhrase: this.state.filterPhrase,
+                searchPhrase: e.target.parentElement.getElementsByTagName("INPUT")[0].value,
                 currentPageNomber: this.state.currentPageNomber,
-                choosenElement: data
+                choosenElement: this.state.choosenElement
             });
-        }).bind(this);
+        }.bind(this);
     }
 
-    sortElementsBy(e){
-        var newState = this.table.tableHeader.state;
-        for(let key in newState){
-            if(e.target.id === key){
-                if(this.table.tableHeader.state[key] === "\u25b2 " + key){
-                    newState[key] = "\u25bc " + key;
-                    this.state.data.sort((a,b) => {
-                        if(a[e.target.id] > b[e.target.id]) return 1;
-                        if(a[e.target.id] === b[e.target.id]) return 0;
-                        if(a[e.target.id] < b[e.target.id]) return -1;
-                        return 0;
-                    });
+    sortData(itself){
+        return function(e){
+            var newState = itself.state;
+            for(let key in newState){
+                if(e.target.id === key){
+                    if(itself.state[key] === "\u25b2 " + key){
+                        newState[key] = "\u25bc " + key;
+                        this.state.data.sort((a,b) => {
+                            if(a[e.target.id] > b[e.target.id]) return 1;
+                            if(a[e.target.id] === b[e.target.id]) return 0;
+                            if(a[e.target.id] < b[e.target.id]) return -1;
+                            return 0;
+                        });
+                    } else{
+                        newState[key] = "\u25b2 " + key;
+                        this.state.data.sort((a,b) => {
+                            if(a[e.target.id] < b[e.target.id]) return 1;
+                            if(a[e.target.id] === b[e.target.id]) return 0;
+                            if(a[e.target.id] > b[e.target.id]) return -1;
+                            return 0;
+                        });
+                    }
                 } else{
-                    newState[key] = "\u25b2 " + key;
-                    this.state.data.sort((a,b) => {
-                        if(a[e.target.id] < b[e.target.id]) return 1;
-                        if(a[e.target.id] === b[e.target.id]) return 0;
-                        if(a[e.target.id] > b[e.target.id]) return -1;
-                        return 0;
-                    });
+                    newState[key] = "\u25ae " + key;
                 }
-            } else{
-                newState[key] = "\u25ae " + key;
             }
-        }
+            itself.setState(newState);
+            this.setState(this.state);
+        }.bind(this);
+    }
 
-        this.sendDataToTable(newState);
+    showElementDescription(itself){
+        return function(e){
+            this.setState({
+                dataIsLoading: this.state.dataIsLoading,
+                data: this.state.data,
+                searchPhrase: this.state.searchPhrase,
+                currentPageNomber: this.state.currentPageNomber,
+                choosenElement: itself.props.data
+            });
+        }.bind(this);
+    }
+
+    addElement(el){
+        this.state.data.unshift(el);
+        this.setState(this.state);
+    }
+
+    loadNewData(itself, url){
+        return function(e){
+            this.setState({
+                dataIsLoading: true,
+                data: [],
+                searchPhrase: this.state.searchPhrase,
+                currentPageNomber: 1,
+                choosenElement: null
+            });
+            this.loading();
+            fetch(url).then(
+                response => { 
+                    return response.json();
+                })
+            .then( data => {
+                this.setState({
+                    dataIsLoading: false,
+                    data: data,
+                    searchPhrase: this.state.searchPhrase,
+                    currentPageNomber: 1,
+                    choosenElement: null
+                });
+            });
+        }.bind(this);
+    }
+
+    loading(){
+        return setTimeout(function(){
+            if(this.state.dataIsLoading){
+                if(this.loadAnimation.length < 10){
+                    this.loadAnimation = this.loadAnimation + "."
+                } else{
+                    this.loadAnimation = "Loading";
+                }
+                this.loading();
+            } else{
+                this.loadAnimation = "Loading";
+            }
+            this.setState(this.state);
+        }.bind(this), 100);
     }
 }
 

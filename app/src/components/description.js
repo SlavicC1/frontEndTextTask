@@ -4,13 +4,10 @@ class Description extends Component{
 
     constructor(props){
         super(props);
-        this.state = {
-            data: null
-        };
     }
 
     render(){
-        if(this.state.data == null)
+        if(this.props.data == null)
         {
             return (
             <div>
@@ -19,15 +16,15 @@ class Description extends Component{
         } else{
             return (
                 <div>
-                    Выбран пользователь <b>{this.state.data.firstName + " " + this.state.data.lastName}</b>
+                    Выбран пользователь <b>{this.props.data.firstName + " " + this.props.data.lastName}</b>
                     Описание:
                     <textarea>
-                        {this.state.data.description}
+                        {this.props.data.description || "Не указано"}
                     </textarea>
-                    <p>Адрес проживания: <b>{this.state.data.address.streetAddress}</b></p>
-                    <p>Город: <b>{this.state.data.address.city}</b></p>
-                    <p>Провинция/штат: <b>{this.state.data.address.state}</b></p>
-                    <p>Индекс: <b>{this.state.data.address.zip}</b></p>
+                    <p>Адрес проживания: <b>{this.props.data.address.streetAddress || "Не указано"}</b></p>
+                    <p>Город: <b>{this.props.data.address.city || "Не указано"}</b></p>
+                    <p>Провинция/штат: <b>{this.props.data.address.props || "Не указано"}</b></p>
+                    <p>Индекс: <b>{this.props.data.address.zip || "Не указано"}</b></p>
                 </div>
             );
         }

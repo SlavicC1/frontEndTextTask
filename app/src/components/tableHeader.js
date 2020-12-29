@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 class TableHeader extends Component{
-    constructor(sortClick, props){
+    constructor(props){
         super(props);
         this.state = {
             id: "\u25ae id",
@@ -10,11 +10,11 @@ class TableHeader extends Component{
             email: "\u25ae email",
             phone: "\u25ae phone"
         };
-        this.sortClick = sortClick;
     }
+
     render(){
         return (
-            <tr id="tableHeader" onClick={this.sortClick}>
+            <tr id="tableHeader" onClick={this.props.sortClick(this)}>
                 <th id="id">{this.state.id}</th>
                 <th id="firstName">{this.state.firstName}</th>
                 <th id="lastName">{this.state.lastName}</th>

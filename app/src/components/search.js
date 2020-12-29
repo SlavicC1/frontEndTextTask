@@ -6,7 +6,7 @@ class Filter extends Component{
         return(
             <div>
                 <input></input>
-                <button onClick={this.props.onClick}>Find</button>
+                <button onClick={this.props.onClick(this)}>Find</button>
             </div>
         );
     }

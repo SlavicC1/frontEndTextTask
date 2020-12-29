@@ -3,27 +3,28 @@ import TableHeader from './tableHeader';
 import TableElement from './tableElement';
 
 class Table extends Component{
-    constructor(data,sortClick, showDescriptionClick, props){
+    constructor(props){
         super(props);
 
         this.state = {
-            choosenElement: null,
-            data: data
+            choosenElement: null
         };
-        this.tableHeader = new TableHeader(sortClick);
-        this.showDescriptionClick = showDescriptionClick;
     }
 
     render(){
 
-        const elements = this.state.data.map(
+        const elements = this.props.data.map(
             el => {
-                    return (new TableElement(el,this.showDescriptionClick(el),{key: el.id}).render());
+                if(el == this.props.choosenElement){
+                    return (<TableElement bg="yellow" data={el} showDescriptionClick={this.props.onElementClick} />);
+                } else{
+                    return (<TableElement bg="white" data={el} showDescriptionClick={this.props.onElementClick} />);
+                }
             });
         return(
                 <table>
                     <thead>
-                        {this.tableHeader.render()}
+                        <TableHeader sortClick={this.props.onHeaderClick}/>
                     </thead>
                     <tbody>
                         {elements}
